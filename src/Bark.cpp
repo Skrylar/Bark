@@ -1,38 +1,55 @@
-#include "Bark.hpp"
+#include "rack.hpp"
 
 
-// The plugin-wide instance of the Plugin class
-Plugin *plugin;
+using namespace rack;
 
-void init(rack::Plugin *p) {
-	plugin = p;
-	// The "slug" is the unique identifier for your plugin and must never change after release, so choose wisely.
-	// It must only contain letters, numbers, and characters "-" and "_". No spaces.
-	// To guarantee uniqueness, it is a good idea to prefix the slug by your name, alias, or company name if available, e.g. "MyCompany-MyPlugin".
-	// The ZIP package must only contain one folder, with the name equal to the plugin's slug.
-	p->slug = "Bark";
-#ifdef version
-	//p->version = TOSTRING(VERSION);
-#endif
-	p->website = "https://github.com/Coirt/Bark";
-	p->manual = "https://github.com/Coirt/Bark/blob/master/README.md";
-
-	// For each module, specify the ModuleWidget subclass, manufacturer slug (for saving in patches), manufacturer human-readable name, module slug, and module name
-
-	p->addModel(createModel<TrimLFOWidget>("Bark", "TrimLFO", "Trim LFO", LFO_TAG, UTILITY_TAG, LOGIC_TAG, DUAL_TAG));
-	p->addModel(createModel<GainWidget>("Bark", "Gain", "Gain Knob", UTILITY_TAG, AMPLIFIER_TAG));
-	p->addModel(createModel<QuadLogicWidget>("Bark", "QuadLogic", "Quad Logic", UTILITY_TAG, LOGIC_TAG));
-	//p->addModel(createModel<ClipperWidget>("Bark", "Clipper", "Clip Gain Distort", UTILITY_TAG, AMPLIFIER_TAG, EFFECT_TAG));
+//Colour	
+//	const NVGcolor BARK_ = nvgRGBA(0, 0, 0, 255);		//nvgRedGreenBlueAlpha == Transparency();
+const NVGcolor BARK_GREEN1 = nvgRGBA(34, 124, 34, 255);		
+const NVGcolor BARK_GREEN2 = nvgRGBA(66, 66, 36, 255);		
+const NVGcolor BARK_GREEN3 = nvgRGBA(75, 83, 32, 255);		
+const NVGcolor BARK_GREEN4 = nvgRGBA(73, 191, 0, 255);		//#1
+const NVGcolor BARK_YELLOW = nvgRGBA(255, 220, 0, 255);		
+const NVGcolor BARK_ORANGE1 = nvgRGBA(255, 150, 0, 255);		//#1
+const NVGcolor BARK_ORANGE2 = nvgRGBA(255, 170, 0, 255);		
+const NVGcolor BARK_ORANGE3 = nvgRGBA(243, 123, 0, 255);		
+const NVGcolor BARK_RED1 = nvgRGBA(179, 15, 0, 255);			
+const NVGcolor BARK_RED2 = nvgRGBA(186, 15, 0, 255);			//#1	
+const NVGcolor BARK_RED3 = nvgRGBA(204, 15, 0, 255);			
 
 
-	////////
-	//Blanks
-	////////
-	p->addModel(createModel<Panel13Widget>("Bark", "Panel13", "Bark Panel 13", BLANK_TAG));
-	p->addModel(createModel<Panel10Widget>("Bark", "Panel10", "Bark Panel 10", BLANK_TAG));
-	p->addModel(createModel<Panel6Widget>("Bark", "Panel6", "Bark Panel 6", BLANK_TAG));
-	
+extern Plugin *plugin;
 
-	// Any other plugin initialization may go here.
-	// As an alternative, consider lazy-loading assets and lookup tables when your module is created to reduce startup times of Rack.
-}
+/////////////////---------
+//						extern Model *modelNAME;
+////////////////----------
+
+extern Model *modelTrimLFO;
+//extern Model *modelGain;
+//extern Model *modelClipper;
+extern Model *modelQuadLogic;
+//extern Model *modelSpaceX
+extern Model *modelPanel6;
+extern Model *modelPanel10;
+extern Model *modelPanel13;
+
+
+/////////////////---------
+//						extern Model *modelNAME;
+////////////////----------
+
+//In .cpp
+/*	struct -NAME-Widget : ModuleWidget {
+-NAME-Widget(-NAME- *module) : ModuleWidget(module) {
+	setPanel(SVG::load(assetPlugin(plugin, "res/-NAME-.svg")));
+	////////////
+	//components
+	////////////
+	//----
+	//	ModuleLightWidget::create	== Light
+	//	Widget::create 				== Screw
+	//	ParamWidget::create 			== Knob
+	//	Port::create					== Port	
+	//	    ""		<COMPONENT>(Vec(0, 0), (for port) = , Port::INPUT, or ,Port::OUTPUT , module, -NAME-::ENUM));
+	//----
+*/
