@@ -1,4 +1,5 @@
 #include "Bark.hpp"
+#include "BAcomponents.hpp"
 
 struct Panel10 : Module {
 	enum ParamIds {
@@ -23,22 +24,13 @@ void Panel10::step()
 {
 }
 
-Panel10Widget::Panel10Widget()
-{
-	Panel10 *module = new Panel10();
-	setModule(module);
-	box.size = Vec(10 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/BarkPanel10.svg")));
-		panel->box.size = box.size;
-		addChild(panel);
+struct Panel10Widget : ModuleWidget {
+	Panel10Widget(Panel10 *module) : ModuleWidget(module) {
+		setPanel(SVG::load(assetPlugin(plugin, "res/BarkPanel10.svg")));
+		//screw
+		addChild(Widget::create<BarkScrew2>(Vec(2, 3)));								//pos1
+		addChild(Widget::create<BarkScrew1>(Vec(box.size.x - 13, 367.2)));			//pos4
 	}
+};
 
-	////////////
-	//components
-	////////////
-	addChild(createScrew<BarkScrew4>(Vec(2, 3)));							//pos1
-	addChild(createScrew<BarkScrew3>(Vec(box.size.x - 13, 367.2)));			//pos4
-}
+Model *modelPanel10 = Model::create<Panel10, Panel10Widget>("Bark", "Panel10", "Bark Panel 10", BLANK_TAG);
