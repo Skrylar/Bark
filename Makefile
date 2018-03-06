@@ -1,9 +1,3 @@
-SLUG = Bark
-VERSION = 0.5.1
-
-# FLAGS will be passed to both the C and C++ compiler
-FLAGS +=
-CFLAGS +=
 CXXFLAGS +=
 
 # Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
@@ -18,4 +12,5 @@ SOURCES += $(wildcard src/*.cpp)
 DISTRIBUTABLES += $(wildcard LICENSE*) res
 
 # Include the VCV plugin Makefile framework
-include ../../plugin.mk
+RACK_DIR ?= ../..
+include $(RACK_DIR)/plugin.mk
