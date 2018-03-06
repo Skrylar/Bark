@@ -1,4 +1,5 @@
 #include "Bark.hpp"
+#include "BAcomponents.hpp"
 
 struct Panel13 : Module {
 	enum ParamIds {
@@ -23,32 +24,14 @@ void Panel13::step()
 {
 }
 
-Panel13Widget::Panel13Widget()
-{
-	Panel13 *module = new Panel13();
-	setModule(module);
-	box.size = Vec(13 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT);
-
-	{
-		SVGPanel *panel = new SVGPanel();
-		panel->setBackground(SVG::load(assetPlugin(plugin, "res/BarkPanel13.svg")));
-		panel->box.size = box.size;
-		addChild(panel);
+struct Panel13Widget : ModuleWidget {
+	Panel13Widget(Panel13 *module) : ModuleWidget(module) {
+		setPanel(SVG::load(assetPlugin(plugin, "res/BarkPanel13.svg")));
+		//screw
+		addChild(Widget::create<BarkScrew2>(Vec(2, 3)));								//pos1
+		addChild(Widget::create<BarkScrew1>(Vec(box.size.x - 13, 367.2)));			//pos4
 	}
+};
 
-	///////////////////////////////////////////////////////////////
-	// Screw Positions
-	//		addChild(createScrew<NAMESCREW>(Vec(15, 0)));						//top left		pos1
-	//		addChild(createScrew<NAMESCREW>(Vec(box.size.x - 30, 0)));			//top right		pos2
-	//		addChild(createScrew<NAMESCREW>(Vec(15, 365)));					//bottom left	pos3
-	//		addChild(createScrew<NAMESCREW>(Vec(box.size.x - 30, 365)));		//bottom right	pos4
-	/////////////////////////////////////////////////////////////
+Model *modelPanel13 = Model::create<Panel13, Panel13Widget>("Bark", "Panel13", "Bark Panel 13", BLANK_TAG);
 
-	////////////
-	//components
-	////////////
-
-	//screw
-	addChild(createScrew<BarkScrew1>(Vec(2, 3)));							//pos1
-	addChild(createScrew<BarkScrew3>(Vec(box.size.x - 13, 367.2)));			//pos4
-}
