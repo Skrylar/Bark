@@ -1,287 +1,75 @@
-#include "rack.hpp"
+#include "Bark.hpp"
+
+// The "slug" is the unique identifier for your plugin and must never change after release, so choose wisely.
+// It must only contain letters, numbers, and characters "-" and "_". No spaces.
+// To guarantee uniqueness, it is a good idea to prefix the slug by your name, alias, or company name if available, e.g. "MyCompany-MyPlugin".
+// The ZIP package must only contain one folder, with the name equal to the plugin's slug.
+//----
+// The plugin-wide instance of the Plugin class
+Plugin *plugin;
+
+void init(rack::Plugin *p) {
+	plugin = p;
+	p->slug = TOSTRING(SLUG);
+	p->version = TOSTRING(VERSION);
+	p->website = "https://github.com/Coirt/Bark";
+	p->manual = "https://github.com/Coirt/Bark/blob/master/README.md";
+
+	//			p->addModel(modelNAME);
+
+//----Modules
+	p->addModel(modelTrimLFO);
+	//p->addModel(modelGain);
+	//p->addModel(modelClipper);
+	p->addModel(modelQuadLogic);
+	//p->addModel(modelMixer);
+//----Panel
+	//p->addModel(modelSpaceX);
+	p->addModel(modelPanel6);
+	p->addModel(modelPanel10);
+	p->addModel(modelPanel13);
+}
 
 
-using namespace rack;
 
-//Colour	
-//	const NVGcolor BARK_ = nvgRGBA(0, 0, 0, 255);		//Red, Green, Blue, Alpha = Transparency
-const NVGcolor BARK_GREEN1 = nvgRGBA(34, 124, 34, 255);		
-const NVGcolor BARK_GREEN2 = nvgRGBA(66, 66, 36, 255);		
-const NVGcolor BARK_GREEN3 = nvgRGBA(75, 83, 32, 255);		
-const NVGcolor BARK_GREEN4 = nvgRGBA(73, 191, 0, 255);		//#1
-const NVGcolor BARK_YELLOW = nvgRGBA(255, 220, 0, 255);		
-const NVGcolor BARK_ORANGE1 = nvgRGBA(255, 150, 0, 255);		//#1
-const NVGcolor BARK_ORANGE2 = nvgRGBA(255, 170, 0, 255);		
-const NVGcolor BARK_ORANGE3 = nvgRGBA(243, 123, 0, 255);		
-const NVGcolor BARK_RED1 = nvgRGBA(179, 15, 0, 255);			
-const NVGcolor BARK_RED2 = nvgRGBA(186, 15, 0, 255);			//#1	
-const NVGcolor BARK_RED3 = nvgRGBA(204, 15, 0, 255);			
+/*
+------------------------//In .cpp for Module------------------------------	
 
-
-
-extern Plugin *plugin;
-
-/////////////////
-// module widgets	//The name of your module
-/////////////////
-//	struct NAMEHERE : ModuleWidget {
-//	NAMEHEREWidget();
-//	};
-////////////////////
-
-struct TrimLFOWidget : ModuleWidget {
-	TrimLFOWidget();
+struct -NAME-Widget : ModuleWidget {
+-NAME-Widget(-NAME- *module);
 };
 
-struct GainWidget : ModuleWidget {
-	GainWidget();
-};
+-NAME-Widget::-NAME-Widget(-NAME- *module) : MouduleWidget(module) {
+box.size = Vec(xWidth, 380);
+{
+SVGPanel *panel = new SVGPanel();
+panel->box.size = box.size;
+setPanel(SVG::load(assetPlugin(plugin, "res/Bark-NAME-.svg")));
+addChild(panel);
+}
 
-//struct ClipperWidget : ModuleWidget {
-//	ClipperWidget();
-//};
+--------------------------------------------------------------------------
+*/
 
-struct Panel13Widget : ModuleWidget {
-	Panel13Widget();
-};
+				//At the end of .cpp of module e.g.
+	/*		//	Model *modelBAR = Model::create<BAR, BARWidget>("Bidoo", "baR", "bAR compressor", DYNAMICS_TAG);
 
-struct Panel10Widget : ModuleWidget {
-	Panel10Widget();
-};
-
-struct Panel6Widget : ModuleWidget {
-	Panel6Widget();
-};
-
-struct QuadLogicWidget : ModuleWidget {
-	QuadLogicWidget();
-};
+			//	Model *model-NAME- = Model::create<-NAME-,-NAME-Widget>("-FOLDER-", "-ShortName-", "-LongName-", THE_TAG);
+	p->addModel(createModel<TrimLFOWidget>("Bark", "TrimLFO", "Trim LFO", LFO_TAG, UTILITY_TAG, LOGIC_TAG, DUAL_TAG));
+	p->addModel(createModel<GainWidget>("Bark", "Gain", "Gain Knob", UTILITY_TAG, AMPLIFIER_TAG));
+	p->addModel(createModel<QuadLogicWidget>("Bark", "QuadLogic", "Quad Logic", UTILITY_TAG, LOGIC_TAG));
+	//p->addModel(createModel<ClipperWidget>("Bark", "Clipper", "Clip Gain Distort", UTILITY_TAG, AMPLIFIER_TAG, EFFECT_TAG));
 
 
+	////////
+	//Blanks
+	////////
+	p->addModel(createModel<Panel13Widget>("Bark", "Panel13", "Bark Panel 13", BLANK_TAG));
+	p->addModel(createModel<Panel10Widget>("Bark", "Panel10", "Bark Panel 10", BLANK_TAG));
+	p->addModel(createModel<Panel6Widget>("Bark", "Panel6", "Bark Panel 6", BLANK_TAG));
+	
 
-/////////////////////////
-//Module custom resources
-/////////////////////////
-//struct FILENAME : SVGScrew {
-//	FILENAME() {
-//		sw->svg = SVG::load(assetPlugin(plugin, "FILELOCATION"));	//Location will be in res/  or res/FOLDER
-//		sw->wrap();
-//		box.size = sw->box.size;
-//	}
-//};
-//			"res/components/		NAME.svg"
-
-////Screw
-struct BarkScrew1 : SVGScrew {
-	BarkScrew1() {
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkScrew1.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkScrew2 : SVGScrew {
-	BarkScrew2() {
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkScrew2.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkScrew3 : SVGScrew {
-	BarkScrew3() {
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkScrew3.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkScrew4 : SVGScrew {
-	BarkScrew4() {
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkScrew4.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-////Switch----
-//	struct FILENAME : SVGSwitch, ToggleSwitch {
-//		FILENAME() {
-//	addFrame(SVG::load(assetPlugin(plugin, "res/components/FILENAME.svg")));	//	State=0
-//	addFrame(SVG::load(assetPlugin(plugin, "res/components/FILENAME.svg")));	//	State=1
-//}
-//};
-//------------------------------------------------------
-struct BarkSwitch : SVGSwitch, ToggleSwitch {
-	BarkSwitch() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/components/BarkSwitch_0.svg")));			//	State=0
-		addFrame(SVG::load(assetPlugin(plugin, "res/components/BarkSwitch_1.svg")));			//	State=1
-	}
-	};
-
-
-////Port----
-	//Port In
-struct BarkInPort : SVGPort {
-	BarkInPort() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkInPort.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkInPort1 : SVGPort {
-	BarkInPort1() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkInPort1.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkInPort2 : SVGPort {
-	BarkInPort2() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkInPort2.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkPatchPortIn : SVGPort{
-	BarkPatchPortIn() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkPatchPortIn.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkInPort350 : SVGPort {
-	BarkInPort350() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkInPort350.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-
-	//Port Out
-struct BarkOutPort : SVGPort {
-	BarkOutPort() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkOutPort.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkOutPort1 : SVGPort {
-	BarkOutPort1() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkOutPort1.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkOutPort2 : SVGPort {
-	BarkOutPort2() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkOutPort2.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkPatchPortOut : SVGPort {
-	BarkPatchPortOut() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkPatchPortOut.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-struct BarkOutPort350 : SVGPort {
-	BarkOutPort350() {
-		background->svg = SVG::load(assetPlugin(plugin, "res/components/BarkOutPort350.svg"));
-		background->wrap();
-		box.size = background->box.size;
-	}
-};
-
-////Knobs
-
-struct BarkKnob24 : SVGKnob {
-	BarkKnob24() {
-		minAngle = -0.835 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob24.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkKnob26 : SVGKnob {
-	BarkKnob26() {
-		minAngle = -0.829 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob26.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkKnob30 : SVGKnob {
-	BarkKnob30() {
-		minAngle = -0.835 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob30.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkKnob40 : SVGKnob {
-	BarkKnob40() {
-		minAngle = -0.835 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob40.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkKnob57 : SVGKnob {
-	BarkKnob57() {
-		minAngle = -0.835 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob57.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkKnob70 : SVGKnob {
-	BarkKnob70() {
-		minAngle = -0.835 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob70.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkKnob84 : SVGKnob {
-	BarkKnob84() {
-		minAngle = -0.835 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob84.svg"));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct BarkKnob92 : SVGKnob {
-	BarkKnob92() {
-		minAngle = -0.835 * M_PI;
-		maxAngle = 0.831 * M_PI;
-		sw->svg = SVG::load(assetPlugin(plugin, "res/components/BarkKnob92.svg")); //90.25px
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
+	// Any other plugin initialization may go here.
+	// As an alternative, consider lazy-loading assets and lookup tables when your module is created to reduce startup times of Rack.
+}
+*/
